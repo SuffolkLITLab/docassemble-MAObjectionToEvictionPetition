@@ -1,0 +1,469 @@
+---
+include:
+  - docassemble.AssemblyLine:assembly_line.yml
+  - docassemble.ALMassachusetts:al_massachusetts.yml
+---
+metadata:
+  title: >-
+    Objection to petition in an eviction action
+  short title: >-
+    Objection to petition in
+  description: |-
+    This interview helps someone in Massachusetts file an objection to a petition in an eviction action.
+  can_I_use_this_form: |
+    If you are a _____________, you can use this interview to ____________.
+  before_you_start: |
+    This interview will help you file an objection to a petition in an eviction action.
+    
+    Before you get started, please gather:
+    
+    1. 
+    1. 
+    1. 
+    
+    When you are finished, you will need to:
+    
+    1. 
+    1.
+  maturity: production
+  estimated_completion_minutes: 10
+  estimated_completion_delta: 5
+  LIST_topics: 
+    - "GO-00-00-00-00"
+    - "HO-00-00-00-00"
+    - "HO-02-00-00-00"
+    - "HO-06-00-00-00"
+  tags:
+    - "GO-00-00-00-00"
+    - "HO-00-00-00-00"
+    - "HO-02-00-00-00"
+    - "HO-06-00-00-00"
+  authors:
+    - Jacqueline Callahan
+  original_form: []
+  original_form_published_on: ""
+  allowed_courts: 
+    - "Housing Court"
+  typical_role: "unknown"
+  al_weaver_version: "1.11.0"
+  generated_on: "2025-10-02"
+  languages:
+    - en
+  jurisdiction: NAM-US-US+MA
+  review_date: 2025-10-02
+  form_titles:
+    - Objection to petition in an eviction action
+  form_numbers: []
+  update_notes: |
+---
+code: |
+  # This controls the default country and list of states in address field questions
+  AL_DEFAULT_COUNTRY = "US"
+---
+code: |
+  # This controls the default state in address field questions
+  AL_DEFAULT_STATE = "MA"
+---
+code: |
+  github_repo_name =  'docassemble-ObjectionToPetitionInAnEvictio'
+---
+code: |
+  interview_short_title = "File an objection to a petition in an eviction action"
+---
+code: |
+  al_form_type = "existing_case" 
+---
+objects:
+  - users: ALPeopleList.using(ask_number=True,target_number=1)
+---
+sections:
+  - review_objection_to_petition_in_an_evictio: Review your answers
+---
+#################### Interview order #####################
+comment: |
+  Controls order and branching logic for questions specific to this form
+id: interview_order_objection_to_petition_in_an_evictio
+code: |
+  # Set the allowed courts for this interview
+  allowed_courts = ['Housing Court']
+  nav.set_section("review_objection_to_petition_in_an_evictio")
+  # Below sets the user_role and user_ask_role by asking a question.
+  # You can set user_ask_role directly instead to either 'plaintiff' or 'defendant'
+  user_ask_role
+  users.gather()
+  set_parts(subtitle=str(users))
+  users1_is_defendant
+  docket_number
+  set_progress(16)
+  trial_court.department
+  trial_court.division
+  plaintiffs.gather()
+  set_progress(32)
+  defendants.gather()
+  signature_date
+  users[0].mailing_address.address
+  set_progress(48)
+  users[0].phone_number
+  users[0].email
+  interview_order_objection_to_petition_in_an_evictio = True
+---
+###################### Main order ######################
+comment: |
+  This block includes the logic for standalone interviews.
+  Delete mandatory: True to include in another interview
+mandatory: True
+code: |
+  al_intro_screen
+  objection_to_petition_in_an_evictio_intro
+  interview_order_objection_to_petition_in_an_evictio
+  signature_date
+  # Store anonymous data for analytics / statistics
+  store_variables_snapshot(
+      persistent=True,
+      data={
+          "zip": showifdef("users[0].address.zip"),
+          "reached_interview_end": True,
+      },
+  )
+  objection_to_petition_in_an_evictio_download
+---
+id: Objection_to_petition_in_an_eviction_action
+continue button field: objection_to_petition_in_an_evictio_intro
+question: |
+  Objection to petition in an eviction action
+subquestion: |
+  This interview will help you file an objection to a petition in an eviction action.
+  
+  Before you get started, please gather:
+  
+  1. 
+  1. 
+  1. 
+  
+  When you are finished, you will need to:
+  
+  1. 
+  1.
+
+  If you are a _____________, you can use this interview to ____________.
+
+  Most people take about 10 minutes to complete this interview.
+---
+id: Screen one
+question: |
+  Screen one
+fields:
+  - "Users1 is defendant": users1_is_defendant
+    datatype: yesno
+  - "Users1 is plaintiff": users1_is_plaintiff
+    datatype: yesno
+  - "Object petition seal eviction": object_petition_seal_eviction
+    datatype: yesno
+  - "Object petition judgment satisfied": object_petition_judgment_satisfied
+    datatype: yesno
+  - "Additional information if applicable": objection_additional_information
+    input type: area
+    required: False
+  - "Notice given to plaintiff attorney": notice_given_to_plaintiff_attorney
+    datatype: yesno
+  - "Notice given to defendant": notice_given_to_defendant
+    datatype: yesno
+  - "Notice given to plaintiff": notice_given_to_plaintiff
+    datatype: yesno
+  - "Date of notice": notice_date
+    datatype: date
+  - "Notice mailing address": notice_mailing_address
+    maxlength: 16
+  - "Service by mail": service_by_mail
+    datatype: yesno
+  - "Service in person": service_in_person
+    datatype: yesno
+  - "Notice email address": notice_email_address
+    datatype: email
+    maxlength: 16
+  - "Service by email": service_by_email
+    datatype: yesno
+  - "Attorneys1 bbo number": attorneys1_bbo_number
+    datatype: number
+---
+id: preview objection_to_petition_in_an_evictio
+question: |
+  Preview your form before you sign it
+subquestion: |
+  Here is a preview of the form you will sign on the next page.   
+  
+  ${ al_court_bundle.as_pdf(key='preview') }
+
+  Click the image to open it in a new tab. Click the "Edit answers" button
+  to edit your answers.
+
+  ${ action_button_html(url_action('review_objection_to_petition_in_an_evictio'), label='Edit answers', color='info') }
+  
+  Remember to come back to this window to continue and sign your form.
+continue button field: objection_to_petition_in_an_evictio_preview_question    
+---
+code: |
+  signature_fields = ['users[0].signature']
+---
+code: |
+  # This is a placeholder for the addresses that will be searched
+  # for matching address to court. Edit if court venue is based on 
+  # a different address than the user's
+  [user.address.address for user in users.complete_elements()]
+  addresses_to_search = [user.address for user in users.complete_elements()]
+---
+id: objection to petition in an evictio review screen
+event: review_objection_to_petition_in_an_evictio
+question: |
+  Review your answers
+review:
+  - Edit: docket_number
+    button: |
+      **Docket number**:
+      ${ docket_number }
+  - Edit: trial_court
+    button: |
+      **Trial court**
+  
+      % if defined("trial_court.department"):
+      * department: ${ trial_court.department }
+      % endif
+      % if defined("trial_court.division"):
+      * division: ${ trial_court.division }
+      % endif
+  - Edit: plaintiffs.revisit
+    button: |
+      **Plaintiffs**
+
+      % for item in plaintiffs:
+        * ${ item }
+      % endfor
+  - Edit: defendants.revisit
+    button: |
+      **Defendants**
+
+      % for item in defendants:
+        * ${ item }
+      % endfor
+  - Edit: users.revisit
+    button: |
+      **Users**
+
+      % for item in users:
+        * ${ item }
+      % endfor
+  - Edit: users1_is_defendant
+    button: |
+      **Users1 is defendant**:
+      ${ word(yesno(users1_is_defendant)) }
+  - Edit: users1_is_plaintiff
+    button: |
+      **Users1 is plaintiff**:
+      ${ word(yesno(users1_is_plaintiff)) }
+  - Edit: object_petition_seal_eviction
+    button: |
+      **Object petition seal eviction**:
+      ${ word(yesno(object_petition_seal_eviction)) }
+  - Edit: object_petition_judgment_satisfied
+    button: |
+      **Object petition judgment satisfied**:
+      ${ word(yesno(object_petition_judgment_satisfied)) }
+  - Edit: objection_additional_information
+    button: |
+      **Additional information if applicable**:
+      > ${ single_paragraph(objection_additional_information) }
+  - Edit: notice_given_to_plaintiff_attorney
+    button: |
+      **Notice given to plaintiff attorney**:
+      ${ word(yesno(notice_given_to_plaintiff_attorney)) }
+  - Edit: notice_given_to_defendant
+    button: |
+      **Notice given to defendant**:
+      ${ word(yesno(notice_given_to_defendant)) }
+  - Edit: notice_given_to_plaintiff
+    button: |
+      **Notice given to plaintiff**:
+      ${ word(yesno(notice_given_to_plaintiff)) }
+  - Edit: notice_date
+    button: |
+      **Date of notice**:
+      ${ notice_date }
+  - Edit: notice_mailing_address
+    button: |
+      **Notice mailing address**:
+      ${ notice_mailing_address }
+  - Edit: service_by_mail
+    button: |
+      **Service by mail**:
+      ${ word(yesno(service_by_mail)) }
+  - Edit: service_in_person
+    button: |
+      **Service in person**:
+      ${ word(yesno(service_in_person)) }
+  - Edit: notice_email_address
+    button: |
+      **Notice email address**:
+      ${ notice_email_address }
+  - Edit: service_by_email
+    button: |
+      **Service by email**:
+      ${ word(yesno(service_by_email)) }
+  - Edit: signature_date
+    button: |
+      **Date of signature**:
+      ${ signature_date }
+  - Edit: attorneys1_bbo_number
+    button: |
+      **Attorneys1 bbo number**:
+      ${ attorneys1_bbo_number }
+---
+continue button field: plaintiffs.revisit
+question: |
+  Edit plaintiffs
+subquestion: |
+  ${ plaintiffs.table }
+
+  ${ plaintiffs.add_action() }
+---
+table: plaintiffs.table
+rows: plaintiffs
+columns:
+  - Name: |
+      row_item.name.full() if defined("row_item.name.first") else ""
+edit:
+  - name.first
+confirm: True
+
+---
+continue button field: defendants.revisit
+question: |
+  Edit defendants
+subquestion: |
+  ${ defendants.table }
+
+  ${ defendants.add_action() }
+---
+table: defendants.table
+rows: defendants
+columns:
+  - Name: |
+      row_item.name.full() if defined("row_item.name.first") else ""
+edit:
+  - name.first
+confirm: True
+
+---
+continue button field: users.revisit
+question: |
+  Edit users
+subquestion: |
+  ${ users.table }
+
+  ${ users.add_action() }
+---
+table: users.table
+rows: users
+columns:
+  - Name: |
+      row_item.name.full() if defined("row_item.name.first") else ""
+  - Signature: |
+      row_item.signature if defined("row_item.signature") else ""
+  - Mailing address: |
+      row_item.mailing_address.block() if defined("row_item.mailing_address.address") else ""
+  - Phone number: |
+      row_item.phone_number if defined("row_item.phone_number") else ""
+  - Email: |
+      row_item.email if defined("row_item.email") else ""
+edit:
+  - name.first
+  - signature
+  - mailing_address.address
+  - phone_number
+  - email
+confirm: True
+
+---
+id: download objection_to_petition_in_an_evictio
+event: objection_to_petition_in_an_evictio_download
+question: |
+  All done
+subquestion: |
+  Thank you ${users}. Your form is ready to download and deliver.
+  
+  View, download and send your form below. Click the "Edit answers" button to fix any mistakes.
+
+  ${ action_button_html(url_action('review_objection_to_petition_in_an_evictio'), label='Edit answers', color='info') }
+  
+  
+  ${ al_user_bundle.download_list_html() }
+  
+
+  ${ al_user_bundle.send_button_html(show_editable_checkbox=False) }
+
+progress: 100
+---
+# ALDocument objects specify the metadata for each template
+objects:
+  - objection_to_petition_in_an_evictio_Post_interview_instructions: ALDocument.using(title="Instructions", filename="objection_to_petition_in_an_evictio_next_steps.docx", enabled=True, has_addendum=False)
+  - objection_to_petition_in_an_evictio_attachment: ALDocument.using(title="Objection to petition in an eviction action", filename="objection_to_petition_in_an_evictio", enabled=True, has_addendum=True, default_overflow_message=AL_DEFAULT_OVERFLOW_MESSAGE)
+---
+# Bundles group the ALDocuments into separate downloads, such as for court and for the user
+objects:
+  - al_user_bundle: ALDocumentBundle.using(elements=[objection_to_petition_in_an_evictio_Post_interview_instructions, objection_to_petition_in_an_evictio_attachment], filename="objection_to_petition_in_an_evictio", title="All forms to download for your records", enabled=True)
+  - al_court_bundle: ALDocumentBundle.using(elements=[objection_to_petition_in_an_evictio_attachment],  filename="objection_to_petition_in_an_evictio", title="All forms to deliver to court", enabled=True)
+---
+# Each attachment defines a key in an ALDocument. We use `i` as the placeholder here so the same template is 
+# used for "preview" and "final" keys, and logic in the template checks the value of 
+# `i` to show or hide the user's signature
+attachment:
+  name: Post-interview-Instructions
+  filename: objection_to_petition_in_an_evictio_next_steps
+  docx template file: objection_to_petition_in_an_evictio_next_steps.docx
+  variable name: objection_to_petition_in_an_evictio_Post_interview_instructions[i]
+  skip undefined: True
+  tagged pdf: True
+---
+attachment:
+  name: objection to petition in an evictio
+  filename: objection_to_petition_in_an_evictio
+  variable name: objection_to_petition_in_an_evictio_attachment[i]
+  skip undefined: True
+  pdf template file: objection_to_petition_in_an_evictio.pdf
+  fields:
+      - "docket_number": ${ docket_number }
+      - "trial_court_department": ${ trial_court.department }
+      - "trial_court_division": ${ trial_court.division }
+      - "plaintiffs1_name_full": ${ plaintiffs[0] }
+      - "plaintiffs1_name_full__1": ${ plaintiffs[0] }
+      - "defendants1_name_full": ${ defendants[0] }
+      - "defendants1_name_full__1": ${ defendants[0] }
+      - "users1_name_full__1": ${ users[0] }
+      - "users1_name_full__2": ${ users[0] }
+      - "users1_is_defendant": ${ users1_is_defendant }
+      - "users1_is_plaintiff": ${ users1_is_plaintiff }
+      - "object_petition_seal_eviction": ${ object_petition_seal_eviction }
+      - "object_petition_judgment_satisfied": ${ object_petition_judgment_satisfied }
+      - "objection_additional_information": ${ objection_to_petition_in_an_evictio_attachment.safe_value("objection_additional_information") }
+      - "notice_given_to_plaintiff_attorney": ${ notice_given_to_plaintiff_attorney }
+      - "notice_given_to_defendant": ${ notice_given_to_defendant }
+      - "notice_given_to_plaintiff": ${ notice_given_to_plaintiff }
+      - "notice_date": ${ notice_date.format() }
+      - "notice_mailing_address": ${ notice_mailing_address }
+      - "service_by_mail": ${ service_by_mail }
+      - "service_in_person": ${ service_in_person }
+      - "notice_email_address": ${ notice_email_address }
+      - "service_by_email": ${ service_by_email }
+      - "users1_signature": ${ users[0].signature }
+      - "signature_date": ${ signature_date }
+      - "users1_mailing_address": ${ users[0].mailing_address }
+      - "users1_phone_number": ${ users[0].phone_number }
+      - "users1_email": ${ users[0].email }
+      - "attorneys1_bbo_number": ${ "{:,.2f}".format(attorneys1_bbo_number) }
+---
+code: |
+  objection_to_petition_in_an_evictio_attachment.overflow_fields["objection_additional_information"].overflow_trigger = 801
+  objection_to_petition_in_an_evictio_attachment.overflow_fields["objection_additional_information"].label = "Additional information if applicable"
+  objection_to_petition_in_an_evictio_attachment.overflow_fields.gathered = True
+
+
+
