@@ -2,6 +2,7 @@
 include:
   - docassemble.AssemblyLine:assembly_line.yml
   - docassemble.ALMassachusetts:al_massachusetts.yml
+  - docassemble.MassAccess:massaccess.yml
 ---
 metadata:
   title: >-
@@ -94,6 +95,7 @@ sections:
   - about_you: Information about you
   - about_op: Information about the other party
   - objection_details: Objection details
+  - notice_details: Notice details
   - review_objection_to_petition_in_an_evictio: Review your answers
   - download: Download and next steps
 ---
@@ -103,7 +105,7 @@ comment: |
 id: interview_order_objection_to_petition_in_an_evictio
 code: |
   # Set the allowed courts for this interview
-  allowed_courts = ['Housing Court']
+  allowed_courts = ['Housing Court', 'Boston Municipal Court', 'District Court', 'Superior Court']
   nav.set_section("review_objection_to_petition_in_an_evictio")
   # Below sets the user_role and user_ask_role by asking a question.
   # You can set user_ask_role directly instead to either 'plaintiff' or 'defendant'
@@ -124,7 +126,14 @@ code: |
   set_progress(48)
   users[0].phone_number
   users[0].email
+  notice_given_to_plaintiff
+  notice_given_to_plaintiff_attorney
+  notice_given_to_defendant
+  service_by_mail
+  service_by_email
+  service_in_person
   attorneys1_bbo_number
+  #users[0].signature
   interview_order_objection_to_petition_in_an_evictio = True
 ---
 ###################### Main order ######################
@@ -157,19 +166,29 @@ subquestion: |
   Use this interview to object to a petition that was filed in your Massachusetts summary process (eviction) case.
 
   You can object if you are the plaintiff/landlord or defendant/tenant named in the case and want to respond to:
+  
   * a Petition to Seal Eviction Record, or
+  
   * a Petition for Judgment or Agreement to be Deemed Satisfied.
 
   Before you start, please gather:
+  
   1. The court department and division from your case (for example, "Housing Court – Western Division")
+  
   2. Your docket number (found on your court paperwork)
+  
   3. The names of the plaintiff and defendant as they appear on the case
+  
   4. A copy of the petition you are objecting to and the name of the person who filed it
+  
   5. Contact information for yourself and the other party or their attorney, including mailing and email addresses
+  
   6. Details on how you will send notice (mail, in person, or email)
 
   When you finish the interview, you will need to:
+  
   1. Download, sign, and file the objection with the same court
+  
   2. Send a copy to the other party or their attorney using the notice method you select
 
   Most people take about 10 minutes to complete this interview.
@@ -533,8 +552,8 @@ attachment:
       - "service_by_email": ${ "Yes" if service_by_email else "Off" }
       - "users1_signature": ${ users[0].signature if defined("users[0].signature") else "" }
       - "signature_date": ${ signature_date }
-      - "users1_mailing_address": ${ users[0].mailing_address.block() if defined("users[0].mailing_address") else "" }
-      - "users1_phone_number": ${ users[0].phone_number if defined("users[0].phone_number") else "" }
+      - "users1_mailing_address": ${ users[0].mailing_address.on_one_line() if defined("users[0].mailing_address") else "" }
+      - "users1_mobile_number": ${ users[0].mobile_number if defined("users[0].mobile_number") else "" }
       - "users1_email_address": ${ users[0].email if defined("users[0].email") else "" }
       - "attorneys1_bbo_number": ${ attorneys1_bbo_number }
 ---
