@@ -11,20 +11,29 @@ metadata:
   description: |-
     This interview helps someone in Massachusetts file an objection to a petition in an eviction action.
   can_I_use_this_form: |
-    If you are a _____________, you can use this interview to ____________.
+    Use this interview if you were part of a Massachusetts summary process (eviction) case and want to object to a petition filed in that same case.
+
+    You may object to either:
+      * a Petition to Seal Eviction Record, or
+      * a Petition for Judgment or Agreement to be Deemed Satisfied.
+
+    You must have been the plaintiff/landlord or the defendant/tenant named in the original case.
   before_you_start: |
     This interview will help you file an objection to a petition in an eviction action.
-    
+
     Before you get started, please gather:
-    
-    1. 
-    1. 
-    1. 
-    
+
+    1. The court department and division for your eviction case
+    2. The docket number from your case paperwork
+    3. The names of the plaintiff (landlord) and defendant (tenant/occupant)
+    4. A copy of the petition you are objecting to so you can identify who filed it
+    5. Contact information for yourself and the other party or their lawyer
+    6. Any notes about how you plan to send notice (mailing address, email, or plans to hand deliver)
+
     When you are finished, you will need to:
-    
-    1. 
-    1.
+
+    1. Sign and file the objection with the court where the case was heard
+    2. Serve a copy of the objection on the other party or their attorney by mail, in person, or by email
   maturity: production
   estimated_completion_minutes: 10
   estimated_completion_delta: 5
@@ -75,9 +84,18 @@ code: |
 ---
 objects:
   - users: ALPeopleList.using(ask_number=True,target_number=1)
+  - other_parties: ALPeopleList.using(ask_number=True, target_number=1)
+  - trial_court: ALCourt
+  - plaintiffs: ALPeopleList.using(ask_number=True, target_number=1)
+  - defendants: ALPeopleList.using(ask_number=True, target_number=1)
 ---
 sections:
+  - getting_started: Getting started
+  - about_you: Information about you
+  - about_op: Information about the other party
+  - objection_details: Objection details
   - review_objection_to_petition_in_an_evictio: Review your answers
+  - download: Download and next steps
 ---
 #################### Interview order #####################
 comment: |
@@ -90,21 +108,23 @@ code: |
   # Below sets the user_role and user_ask_role by asking a question.
   # You can set user_ask_role directly instead to either 'plaintiff' or 'defendant'
   user_ask_role
+  user_role = user_ask_role
+  trial_court
   users.gather()
+  users1_is_plaintiff = not users1_is_defendant
+  other_parties.gather()
   set_parts(subtitle=str(users))
   users1_is_defendant
   docket_number
   set_progress(16)
-  trial_court.department
-  trial_court.division
   plaintiffs.gather()
   set_progress(32)
   defendants.gather()
-  signature_date
   users[0].mailing_address.address
   set_progress(48)
   users[0].phone_number
   users[0].email
+  attorneys1_bbo_number
   interview_order_objection_to_petition_in_an_evictio = True
 ---
 ###################### Main order ######################
@@ -116,7 +136,9 @@ code: |
   al_intro_screen
   objection_to_petition_in_an_evictio_intro
   interview_order_objection_to_petition_in_an_evictio
-  signature_date
+  basic_questions_signature_flow
+  users[0].signature
+  signature_date = today()
   # Store anonymous data for analytics / statistics
   store_variables_snapshot(
       persistent=True,
@@ -132,59 +154,144 @@ continue button field: objection_to_petition_in_an_evictio_intro
 question: |
   Objection to petition in an eviction action
 subquestion: |
-  This interview will help you file an objection to a petition in an eviction action.
-  
-  Before you get started, please gather:
-  
-  1. 
-  1. 
-  1. 
-  
-  When you are finished, you will need to:
-  
-  1. 
-  1.
+  Use this interview to object to a petition that was filed in your Massachusetts summary process (eviction) case.
 
-  If you are a _____________, you can use this interview to ____________.
+  You can object if you are the plaintiff/landlord or defendant/tenant named in the case and want to respond to:
+  * a Petition to Seal Eviction Record, or
+  * a Petition for Judgment or Agreement to be Deemed Satisfied.
+
+  Before you start, please gather:
+  1. The court department and division from your case (for example, "Housing Court – Western Division")
+  2. Your docket number (found on your court paperwork)
+  3. The names of the plaintiff and defendant as they appear on the case
+  4. A copy of the petition you are objecting to and the name of the person who filed it
+  5. Contact information for yourself and the other party or their attorney, including mailing and email addresses
+  6. Details on how you will send notice (mail, in person, or email)
+
+  When you finish the interview, you will need to:
+  1. Download, sign, and file the objection with the same court
+  2. Send a copy to the other party or their attorney using the notice method you select
 
   Most people take about 10 minutes to complete this interview.
 ---
-id: Screen one
+id: user role
 question: |
-  Screen one
+  Did you start this case, or are you responding to a case that someone else started?
 fields:
-  - "Users1 is defendant": users1_is_defendant
+  - no label: user_ask_role
+    datatype: radio
+    choices:
+      - Starting a new case: plaintiff
+      - Responding to a case: defendant
+  - note: |
+      Okay, you are the **Plaintiff** or Petitioner in this case. The other side is the **Defendant** or Respondent.
+    show if:
+      variable: user_ask_role
+      is: "plaintiff"
+  - note: |
+      Okay, you are the **Defendant** or Respondent in this case. The other side is the **Plaintiff** or Petitioner.
+    show if:
+      variable: user_ask_role
+      is: "defendant"
+help:
+  label: |
+    How do I know?
+  content: |
+    If you are the first person to file a form in the case, you started the case. You are the "Plaintiff" or the "Petitioner."
+
+    If you are responding to a case or court papers someone else filed, you are the "Defendant" or the "Respondent."
+---
+id: trial_court
+question: |
+  Which court is your case in?
+subquestion: |
+  Select the court that is listed on your eviction paperwork. If you are not sure, look at the top of your court form.
+fields:
+  - no label: trial_court
+    datatype: object
+    choices: all_courts
+help:
+  label: |
+    How do I pick the court?
+  content: |
+    Choose the court that is on your existing eviction case paperwork. For this interview we limit you to courts in the Housing Court Department.
+---
+id: docket_number
+question: |
+  What is your case's docket number?
+subquestion: |
+  The docket number is on your court papers. It might look like 
+  "24H84CV001234" or similar.
+fields:
+  - Docket number: docket_number
+    required: True
+    help: |
+      Look for a number like "24H84CV001234" on your court papers.
+      The "24" is the year, "H84" might be the court code, and the rest is your case number.
+---
+id: objection details
+question: |
+  Tell us about the petition you are objecting to
+fields:
+  - "Are you responding to a petition that someone else filed in your eviction case?": users1_is_defendant
+    datatype: yesnoradio
+    help: |
+      Choose "Yes" if the other side filed the petition and you are objecting to it. Choose "No" if you filed the petition yourself.
+  - note: |
+      Check every petition you are objecting to.
+  - "Petition to Seal Eviction Record": object_petition_seal_eviction
     datatype: yesno
-  - "Users1 is plaintiff": users1_is_plaintiff
+  - "Petition for Judgment or Agreement to be Deemed Satisfied": object_petition_judgment_satisfied
     datatype: yesno
-  - "Object petition seal eviction": object_petition_seal_eviction
-    datatype: yesno
-  - "Object petition judgment satisfied": object_petition_judgment_satisfied
-    datatype: yesno
-  - "Additional information if applicable": objection_additional_information
+  - "Explain any additional reasons for your objection (optional)": objection_additional_information
     input type: area
     required: False
-  - "Notice given to plaintiff attorney": notice_given_to_plaintiff_attorney
+---
+id: notice_recipients
+question: |
+  Who did you give notice to?
+subquestion: |
+  You must let the other side know that you objected to the petition. Tell the court who you sent notice to.
+fields:
+  - "I gave notice to the plaintiff": notice_given_to_plaintiff
     datatype: yesno
-  - "Notice given to defendant": notice_given_to_defendant
+  - "I gave notice to the plaintiff's attorney": notice_given_to_plaintiff_attorney
     datatype: yesno
-  - "Notice given to plaintiff": notice_given_to_plaintiff
+  - "I gave notice to the defendant": notice_given_to_defendant
     datatype: yesno
-  - "Date of notice": notice_date
+  - "Date you gave notice": notice_date
     datatype: date
-  - "Notice mailing address": notice_mailing_address
-    maxlength: 16
-  - "Service by mail": service_by_mail
+    help: |
+      Enter the date you sent or delivered the notice. This might be today or a date in the past.
+---
+id: notice_delivery_details
+question: |
+  How did you deliver the notice?
+subquestion: |
+  Select all methods you used to give notice. You can also provide the address or email you used.
+fields:
+  - "I sent the notice by mail": service_by_mail
     datatype: yesno
-  - "Service in person": service_in_person
+  - "I delivered the notice in person": service_in_person
     datatype: yesno
-  - "Notice email address": notice_email_address
+  - "Mailing address you used": notice_mailing_address
+    required: False
+  - "I sent the notice by email": service_by_email
+    datatype: yesno
+  - "Email address you used": notice_email_address
     datatype: email
-    maxlength: 16
-  - "Service by email": service_by_email
-    datatype: yesno
-  - "Attorneys1 bbo number": attorneys1_bbo_number
-    datatype: number
+    required: False
+
+---
+id: attorneys bbo number
+question: |
+  Attorney information (optional)
+subquestion: |
+  If an attorney represents you in this case, enter their Massachusetts Board of Bar Overseers (BBO) number.
+fields:
+  - "Attorney's BBO number": attorneys1_bbo_number
+    required: False
+
 ---
 id: preview objection_to_petition_in_an_evictio
 question: |
@@ -252,62 +359,33 @@ review:
       % for item in users:
         * ${ item }
       % endfor
-  - Edit: users1_is_defendant
-    button: |
-      **Users1 is defendant**:
-      ${ word(yesno(users1_is_defendant)) }
-  - Edit: users1_is_plaintiff
-    button: |
-      **Users1 is plaintiff**:
-      ${ word(yesno(users1_is_plaintiff)) }
   - Edit: object_petition_seal_eviction
     button: |
-      **Object petition seal eviction**:
-      ${ word(yesno(object_petition_seal_eviction)) }
-  - Edit: object_petition_judgment_satisfied
-    button: |
-      **Object petition judgment satisfied**:
-      ${ word(yesno(object_petition_judgment_satisfied)) }
+      **Petition type**:
+
+      * Objection to sealing eviction record: ${ word(yesno(object_petition_seal_eviction)) }
+      * Objection to deeming judgment satisfied: ${ word(yesno(object_petition_judgment_satisfied)) }
   - Edit: objection_additional_information
     button: |
-      **Additional information if applicable**:
+      **Additional explanation**:
       > ${ single_paragraph(objection_additional_information) }
-  - Edit: notice_given_to_plaintiff_attorney
+  - Edit: notice_recipients
     button: |
-      **Notice given to plaintiff attorney**:
-      ${ word(yesno(notice_given_to_plaintiff_attorney)) }
-  - Edit: notice_given_to_defendant
+      **Notice recipients**:
+
+      * Notified the plaintiff: ${ word(yesno(notice_given_to_plaintiff)) }
+      * Notified the plaintiff's attorney: ${ word(yesno(notice_given_to_plaintiff_attorney)) }
+      * Notified the defendant: ${ word(yesno(notice_given_to_defendant)) }
+      * Date you gave notice: ${ notice_date }
+  - Edit: notice_delivery_details
     button: |
-      **Notice given to defendant**:
-      ${ word(yesno(notice_given_to_defendant)) }
-  - Edit: notice_given_to_plaintiff
-    button: |
-      **Notice given to plaintiff**:
-      ${ word(yesno(notice_given_to_plaintiff)) }
-  - Edit: notice_date
-    button: |
-      **Date of notice**:
-      ${ notice_date }
-  - Edit: notice_mailing_address
-    button: |
-      **Notice mailing address**:
-      ${ notice_mailing_address }
-  - Edit: service_by_mail
-    button: |
-      **Service by mail**:
-      ${ word(yesno(service_by_mail)) }
-  - Edit: service_in_person
-    button: |
-      **Service in person**:
-      ${ word(yesno(service_in_person)) }
-  - Edit: notice_email_address
-    button: |
-      **Notice email address**:
-      ${ notice_email_address }
-  - Edit: service_by_email
-    button: |
-      **Service by email**:
-      ${ word(yesno(service_by_email)) }
+      **How you delivered notice**:
+
+      * Served by mail: ${ word(yesno(service_by_mail)) }
+      * Mailing address used: ${ notice_mailing_address }
+      * Served in person: ${ word(yesno(service_in_person)) }
+      * Served by email: ${ word(yesno(service_by_email)) }
+      * Email address used: ${ notice_email_address }
   - Edit: signature_date
     button: |
       **Date of signature**:
@@ -439,26 +517,26 @@ attachment:
       - "defendants1_name_full__1": ${ defendants[0] }
       - "users1_name_full__1": ${ users[0] }
       - "users1_name_full__2": ${ users[0] }
-      - "users1_is_defendant": ${ users1_is_defendant }
-      - "users1_is_plaintiff": ${ users1_is_plaintiff }
-      - "object_petition_seal_eviction": ${ object_petition_seal_eviction }
-      - "object_petition_judgment_satisfied": ${ object_petition_judgment_satisfied }
+      - "users1_is_defendant": ${ "Yes" if users1_is_defendant else "Off" }
+      - "users1_is_plaintiff": ${ "Yes" if users1_is_plaintiff else "Off" }
+      - "object_petition_seal_eviction": ${ "Yes" if object_petition_seal_eviction else "Off" }
+      - "object_petition_judgment_satisfied": ${ "Yes" if object_petition_judgment_satisfied else "Off" }
       - "objection_additional_information": ${ objection_to_petition_in_an_evictio_attachment.safe_value("objection_additional_information") }
-      - "notice_given_to_plaintiff_attorney": ${ notice_given_to_plaintiff_attorney }
-      - "notice_given_to_defendant": ${ notice_given_to_defendant }
-      - "notice_given_to_plaintiff": ${ notice_given_to_plaintiff }
+      - "notice_given_to_plaintiff_attorney": ${ "Yes" if notice_given_to_plaintiff_attorney else "Off" }
+      - "notice_given_to_defendant": ${ "Yes" if notice_given_to_defendant else "Off" }
+      - "notice_given_to_plaintiff": ${ "Yes" if notice_given_to_plaintiff else "Off" }
       - "notice_date": ${ notice_date.format() }
       - "notice_mailing_address": ${ notice_mailing_address }
-      - "service_by_mail": ${ service_by_mail }
-      - "service_in_person": ${ service_in_person }
+      - "service_by_mail": ${ "Yes" if service_by_mail else "Off" }
+      - "service_in_person": ${ "Yes" if service_in_person else "Off" }
       - "notice_email_address": ${ notice_email_address }
-      - "service_by_email": ${ service_by_email }
-      - "users1_signature": ${ users[0].signature }
+      - "service_by_email": ${ "Yes" if service_by_email else "Off" }
+      - "users1_signature": ${ users[0].signature if defined("users[0].signature") else "" }
       - "signature_date": ${ signature_date }
-      - "users1_mailing_address": ${ users[0].mailing_address }
-      - "users1_phone_number": ${ users[0].phone_number }
-      - "users1_email": ${ users[0].email }
-      - "attorneys1_bbo_number": ${ "{:,.2f}".format(attorneys1_bbo_number) }
+      - "users1_mailing_address": ${ users[0].mailing_address.block() if defined("users[0].mailing_address") else "" }
+      - "users1_phone_number": ${ users[0].phone_number if defined("users[0].phone_number") else "" }
+      - "users1_email_address": ${ users[0].email if defined("users[0].email") else "" }
+      - "attorneys1_bbo_number": ${ attorneys1_bbo_number }
 ---
 code: |
   objection_to_petition_in_an_evictio_attachment.overflow_fields["objection_additional_information"].overflow_trigger = 801
