@@ -195,13 +195,15 @@ subquestion: |
 ---
 id: user role
 question: |
-  Did you start this case, or are you responding to a case that someone else started?
+  Are you the landlord or the tenant in this eviction case?
+subquestion: |
+  This helps us understand your role in the case.
 fields:
   - no label: user_ask_role
     datatype: radio
     choices:
-      - Starting a new case: plaintiff
-      - Responding to a case: defendant
+      - I am the landlord (I started the eviction): plaintiff
+      - I am the tenant (I'm responding to the eviction): defendant
   - note: |
       Okay, you are the **Plaintiff** or Petitioner in this case. The other side is the **Defendant** or Respondent.
     show if:
