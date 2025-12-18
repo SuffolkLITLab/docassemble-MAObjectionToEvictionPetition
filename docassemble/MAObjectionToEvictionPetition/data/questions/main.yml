@@ -163,35 +163,11 @@ continue button field: objection_to_petition_in_an_evictio_intro
 question: |
   Objection to petition in an eviction action
 subquestion: |
-  Use this interview to object to a petition that was filed in your Massachusetts summary process (eviction) case.
+  Use this interview to object to a petition filed in your Massachusetts summary process (eviction) case. You can object to a Petition to Seal Eviction Record or a Petition for Judgment or Agreement to be Deemed Satisfied.
 
-  You can object if you are the plaintiff/landlord or defendant/tenant named in the case and want to respond to:
-  
-  * a Petition to Seal Eviction Record, or
-  
-  * a Petition for Judgment or Agreement to be Deemed Satisfied.
+  Before you start, gather: court department and division, docket number, names of parties, the petition you're objecting to, and contact information for all parties.
 
-  Before you start, please gather:
-  
-  1. The court department and division from your case (for example, "Housing Court – Western Division")
-  
-  2. Your docket number (found on your court paperwork)
-  
-  3. The names of the plaintiff and defendant as they appear on the case
-  
-  4. A copy of the petition you are objecting to and the name of the person who filed it
-  
-  5. Contact information for yourself and the other party or their attorney, including mailing and email addresses
-  
-  6. Details on how you will send notice (mail, in person, or email)
-
-  When you finish the interview, you will need to:
-  
-  1. Download, sign, and file the objection with the same court
-  
-  2. Send a copy to the other party or their attorney using the notice method you select
-
-  Most people take about 10 minutes to complete this interview.
+  After completing the interview, you'll need to download, sign, and file the objection with the court, then send a copy to the other party or their attorney.
 ---
 id: user role
 question: |
@@ -270,36 +246,36 @@ fields:
 ---
 id: notice_recipients
 question: |
-  Who did you give notice to?
+  Who will you give notice to?
 subquestion: |
-  You must let the other side know that you objected to the petition. Tell the court who you sent notice to.
+  You must let the other side know that you are objecting to the petition. Tell the court who you will send notice to.
 fields:
-  - "I gave notice to the plaintiff": notice_given_to_plaintiff
+  - "I will give notice to the plaintiff": notice_given_to_plaintiff
     datatype: yesno
-  - "I gave notice to the plaintiff's attorney": notice_given_to_plaintiff_attorney
+  - "I will give notice to the plaintiff's attorney": notice_given_to_plaintiff_attorney
     datatype: yesno
-  - "I gave notice to the defendant": notice_given_to_defendant
+  - "I will give notice to the defendant": notice_given_to_defendant
     datatype: yesno
-  - "Date you gave notice": notice_date
+  - "Date you will give notice": notice_date
     datatype: date
     help: |
-      Enter the date you sent or delivered the notice. This might be today or a date in the past.
+      Enter the date you plan to send or deliver the notice. This might be today or a date in the future.
 ---
 id: notice_delivery_details
 question: |
-  How did you deliver the notice?
+  How will you deliver the notice?
 subquestion: |
-  Select all methods you used to give notice. You can also provide the address or email you used.
+  Select all methods you will use to give notice. You can also provide the address or email you will use.
 fields:
-  - "I sent the notice by mail": service_by_mail
+  - "I will send the notice by mail": service_by_mail
     datatype: yesno
-  - "I delivered the notice in person": service_in_person
+  - "I will deliver the notice in person": service_in_person
     datatype: yesno
-  - "Mailing address you used": notice_mailing_address
+  - "Mailing address you will use": notice_mailing_address
     required: False
-  - "I sent the notice by email": service_by_email
+  - "I will send the notice by email": service_by_email
     datatype: yesno
-  - "Email address you used": notice_email_address
+  - "Email address you will use": notice_email_address
     datatype: email
     required: False
 
@@ -394,19 +370,19 @@ review:
     button: |
       **Notice recipients**:
 
-      * Notified the plaintiff: ${ word(yesno(notice_given_to_plaintiff)) }
-      * Notified the plaintiff's attorney: ${ word(yesno(notice_given_to_plaintiff_attorney)) }
-      * Notified the defendant: ${ word(yesno(notice_given_to_defendant)) }
-      * Date you gave notice: ${ notice_date }
+      * Will notify the plaintiff: ${ word(yesno(notice_given_to_plaintiff)) }
+      * Will notify the plaintiff's attorney: ${ word(yesno(notice_given_to_plaintiff_attorney)) }
+      * Will notify the defendant: ${ word(yesno(notice_given_to_defendant)) }
+      * Date you will give notice: ${ notice_date }
   - Edit: notice_delivery_details
     button: |
-      **How you delivered notice**:
+      **How you will deliver notice**:
 
-      * Served by mail: ${ word(yesno(service_by_mail)) }
-      * Mailing address used: ${ notice_mailing_address }
-      * Served in person: ${ word(yesno(service_in_person)) }
-      * Served by email: ${ word(yesno(service_by_email)) }
-      * Email address used: ${ notice_email_address }
+      * Will serve by mail: ${ word(yesno(service_by_mail)) }
+      * Mailing address to use: ${ notice_mailing_address }
+      * Will serve in person: ${ word(yesno(service_in_person)) }
+      * Will serve by email: ${ word(yesno(service_by_email)) }
+      * Email address to use: ${ notice_email_address }
   - Edit: signature_date
     button: |
       **Date of signature**:
