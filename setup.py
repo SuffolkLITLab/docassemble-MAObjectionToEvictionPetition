@@ -44,7 +44,7 @@ def find_package_data(where='.', package='', exclude=standard_exclude, exclude_d
     return out
 
 setup(name='docassemble.MAObjectionToEvictionPetition',
-      version='1.0',
+      version='1.1',
       description=('Objection to petition in an eviction action'),
       long_description='# docassemble.ObjectionToPetitionInAnEviction\r\n\r\nObjection to petition in an eviction action\r\n\r\n## Author\r\n\r\nSuffolk LIT Lab\r\n\r\n',
       long_description_content_type='text/markdown',
