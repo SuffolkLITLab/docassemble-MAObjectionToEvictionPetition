@@ -497,7 +497,7 @@ objects:
 attachment:
   name: Post-interview-Instructions
   filename: objection_to_petition_in_an_evictio_next_steps
-  docx template file: objection_to_petition_in_an_evictio_next_steps.docx
+  docx template file: objection_to_petition_in_an_eviction_next_steps.docx
   variable name: objection_to_petition_in_an_evictio_Post_interview_instructions[i]
   skip undefined: True
   tagged pdf: True
@@ -507,7 +507,7 @@ attachment:
   filename: objection_to_petition_in_an_evictio
   variable name: objection_to_petition_in_an_evictio_attachment[i]
   skip undefined: True
-  pdf template file: objection_to_petition_in_an_evictio.pdf
+  pdf template file: objection_to_petition_in_an_eviction.pdf
   fields:
       - "docket_number": ${ docket_number }
       - "trial_court_department": ${ trial_court.department }
