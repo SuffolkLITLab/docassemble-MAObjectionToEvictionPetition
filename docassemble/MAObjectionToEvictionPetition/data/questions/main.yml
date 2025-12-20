@@ -6,22 +6,24 @@ include:
 ---
 metadata:
   title: >-
-    Objection to petition in an eviction action
+    Objection to petition to seal an eviction or to deem judgment satisfied
   short title: >-
-    Objection to petition in
+    Objection to petition to seal an eviction
   description: |-
-    This interview helps someone in Massachusetts file an objection to a petition in an eviction action.
+    This interview helps someone in Massachusetts file an objection to a petition
+    to seal an eviction action or to deem a judgment satisfied.
   can_I_use_this_form: |
-    Use this interview if you were part of a Massachusetts summary process (eviction) case and want to object to a petition filed in that same case.
+    Use this interview if you were part of a Massachusetts summary process 
+    (eviction) case and want to object to a petition to seal (make private)
+    the eviction record.
 
     You may object to either:
       * a Petition to Seal Eviction Record, or
       * a Petition for Judgment or Agreement to be Deemed Satisfied.
 
-    You must have been the plaintiff/landlord or the defendant/tenant named in the original case.
+    You must have been the landlord or tenant in the original eviction case
+    to use this form.
   before_you_start: |
-    This interview will help you file an objection to a petition in an eviction action.
-
     Before you get started, please gather:
 
     1. The court department and division for your eviction case
@@ -50,8 +52,9 @@ metadata:
     - "HO-06-00-00-00"
   authors:
     - Jacqueline Callahan
-  original_form: []
-  original_form_published_on: ""
+  original_form:
+    - https://www.mass.gov/doc/objection-to-petition/download
+  original_form_published_on: 2025-04-01
   allowed_courts: 
     - "Housing Court"
   typical_role: "unknown"
@@ -60,10 +63,11 @@ metadata:
   languages:
     - en
   jurisdiction: NAM-US-US+MA
-  review_date: 2025-10-02
+  review_date: 2025-12-19
   form_titles:
     - Objection to petition in an eviction action
-  form_numbers: []
+  form_numbers:
+    - (BMC, DC, HC) -SP- TC0112
   update_notes: |
 ---
 code: |
@@ -75,7 +79,7 @@ code: |
   AL_DEFAULT_STATE = "MA"
 ---
 code: |
-  github_repo_name =  'docassemble-ObjectionToPetitionInAnEvictio'
+  github_repo_name =  'docassemble-MAObjectionToEvictionPetition'
 ---
 code: |
   interview_short_title = "File an objection to a petition in an eviction action"
